@@ -1,17 +1,17 @@
-一、内联函数inline
+一、内联函数inline  
 引入内联函数的目的是为了解决程序中函数调用的效率问题，这么说吧，程序在编译器编译的时候，编译器将程序中出现的内联函数的调用表达式用内联函数的函数体进行替换，
 而对于其他的函数，都是在运行时候才被替代。这其实就是个空间代价换时间的i节省。所以内联函数一般都是1-5行的小函数。在使用内联函数时要留神：
 
-1.在内联函数内不允许使用循环语句和开关语句；
-2.内联函数的定义必须出现在内联函数第一次调用之前；
-3.类结构中所在的类说明内部定义的函数是内联函数。
+1.在内联函数内不允许使用循环语句和开关语句；  
+2.内联函数的定义必须出现在内联函数第一次调用之前；  
+3.类结构中所在的类说明内部定义的函数是内联函数。  
 
-二、使用new和delete时，使用相同的形式
- 在new中使用了[]，则在delete中也应该用[]
- 在new中没有使用[]，则在delete中一定不要用[]。
-  
-三、转换构造函数
- 1、 转换构造函数是将一个其他类型的数据转换成一个类的对象。
+二、使用new和delete时，使用相同的形式  
+ 在new中使用了[]，则在delete中也应该用[]  
+ 在new中没有使用[]，则在delete中一定不要用[]。  
+
+三、转换构造函数  
+ 1、 转换构造函数是将一个其他类型的数据转换成一个类的对象。  
   转换构造函数只有一个形参，如
     Complex(double r) {real=r;imag=0;}
 其作用是将double型的参数r转换成Complex类的对象，将r作为复数的实部，虚部为0。用户可以根据需要定义转换构造函数，在函数体中告诉编译系统怎样去进行转换。
@@ -19,26 +19,32 @@
 
 2、再谈构造函数
 构造函数的本意是在创建对象的时候初始化对象，编译器会根据传递的实参来匹配不同的（重载的）构造函数。
+
 1) 默认构造函数。就是编译器自动生成的构造函数。以 Complex 类为例，它的原型为：
-Complex();  //没有参数
+   Complex();  //没有参数
 
 2) 普通构造函数。就是用户自定义的构造函数。以 Complex 类为例，它的原型为：
-Complex(double real, double imag);  //两个参数
+   Complex(double real, double imag);  //两个参数
 
 3) 拷贝构造函数。在以拷贝的方式初始化对象时调用。以 Complex 类为例，它的原型为：
-Complex(const Complex &c);
+   Complex(const Complex &c);
 
 4) 转换构造函数。将其它类型转换为当前类类型时调用。以 Complex 为例，它的原型为：
-Complex(double real);
+   Complex(double real);
 
 四、类型转换函数的语法格式为：
+
+```c++
 operator type(){
     //TODO:
     return data;
 }
+```
 
 operator 是 C++ 关键字，type 是要转换的目标类型，data 是要返回的 type 类型的数据。
 因为要转换的目标类型是 type，所以返回值 data 也必须是 type 类型。
+
+```c++
 #include <iostream>
 using namespace std;
 
@@ -73,20 +79,22 @@ int main(){
     Complex c1(24.6, 100);
     double f = c1;  //相当于 double f = Complex::operator double(&c1);
     cout<<"f = "<<f<<endl;
- 
-    f = 12.5 + c1 + 6;  //相当于 f = 12.5 + Complex::operator double(&c1) + 6;
-    cout<<"f = "<<f<<endl;
- 
-    int n = Complex(43.2, 9.3);  //先转换为 double，再转换为 int
-    cout<<"n = "<<n<<endl;
 
-    return 0;
+	f = 12.5 + c1 + 6;  //相当于 f = 12.5 + Complex::operator double(&c1) + 6;
+	cout<<"f = "<<f<<endl;
+
+	int n = Complex(43.2, 9.3);  //先转换为 double，再转换为 int
+	cout<<"n = "<<n<<endl;
+
+	return 0;
+
 }
+```
 
-运行结果：
-f = 24.6
-f = 43.1
-n = 43
+> 运行结果：
+> f = 24.6
+> f = 43.1
+> n = 43
 
 类型转换函数和运算符的重载非常相似，都使用 operator 关键字，因此也把类型转换函数称为类型转换运算符。
 
@@ -100,12 +108,17 @@ n = 43
 
 4) 一个类虽然可以有多个类型转换函数（类似于函数重载），但是如果多个类型转换函数要转换的目标类型本身又可以相互转换（类型相近），那么有时候就会产生二义性。
 
+```
 operator double() const { return m_real; }  //转换为double类型
 operator int() const { return (int)m_real; }  //转换为int类型
+```
 
 那么下面的写法就会引发二义性：
+
+```
 Complex c1(24.6, 100);
 float f = 12.5 + c1;
+```
 
 （二）、四种转换类型
  static_cast、dynamic_cast、const_cast和reinterpret_cast
@@ -148,7 +161,7 @@ int *p = const_cast<int*>(&n);
 运行结果：
 n = 100
 *p = 234
- 
+
  n 和 *p 输出的值不一样，C++ 对常量的处理更像是编译时期的#define，是一个值替换的过程，代码中所有使用 n 的地方在编译期间就被替换成了 100。换句话说，第 8 行代码被修改成了下面的形式：
 cout<<"n = "<<100<<endl;
 这样以来，即使程序在运行期间修改 n 的值，也不会影响 cout 语句了。
@@ -157,6 +170,8 @@ cout<<"n = "<<100<<endl;
 是“重新解释”的意思，顾名思义，reinterpret_cast 这种转换仅仅是对二进制位的重新解释，不会借助已有的转换规则对数据进行调整，非常简单粗暴，所以风险很高。
 reinterpret_cast 可以认为是 static_cast 的一种补充，一些 static_cast 不能完成的转换，就可以用 reinterpret_cast 来完成，
 例如两个具体类型指针之间的转换、int 和指针之间的转换（有些编译器只允许 int 转指针，不允许反过来）。
+
+```
 #include <iostream>
 using namespace std;
 class A{
@@ -176,13 +191,16 @@ int main(){
     //将 A* 转换为 int*
     p = reinterpret_cast<int*>(new A(25, 96));
     cout<<*p<<endl;
-   
-    return 0;
-}
 
-运行结果：
-3.0262e+29
-25
+	return 0;
+
+}
+```
+
+> 运行结果：
+> 3.0262e+29
+> 25
+
 4、dynamic_cast 关键字
 dynamic_cast 用于在类的继承层次之间进行类型转换，它既允许向上转型（Upcasting），也允许向下转型（Downcasting）。向上转型是无条件的，不会进行任何检测，所以都能成功；
 向下转型的前提必须是安全的，要借助 RTTI 进行检测，所有只有一部分能成功。
@@ -196,28 +214,32 @@ dynamic_cast <newType> (expression)
 newType 和 expression 必须同时是指针类型或者引用类型。换句话说，dynamic_cast 只能转换指针类型和引用类型，其它类型（int、double、数组、类、结构体等）都不行。
 
 对于指针，如果转换失败将返回 NULL；对于引用，如果转换失败将抛出std::bad_cast异常。
-1) 向上转型（Upcasting）
-向上转型时，只要待转换的两个类型之间存在继承关系，并且基类包含了虚函数（这些信息在编译期间就能确定），
-就一定能转换成功。因为向上转型始终是安全的，所以 dynamic_cast 不会进行任何运行期间的检查，这个时候的 dynamic_cast 和 static_cast 就没有什么区别了。
- //情况①
-    Derived *pd1 = new Derived(35, 78);
-    Base *pb1 = dynamic_cast<Derived*>(pd1);
-    cout<<"pd1 = "<<pd1<<", pb1 = "<<pb1<<endl;
-    cout<<pb1->get_a()<<endl;
-    pb1->func();
-    //情况②
-    int n = 100;
-    Derived *pd2 = reinterpret_cast<Derived*>(&n);
-    Base *pb2 = dynamic_cast<Base*>(pd2);
-    cout<<"pd2 = "<<pd2<<", pb2 = "<<pb2<<endl;
-    cout<<pb2->get_a()<<endl;  //输出一个垃圾值
-    pb2->func();  //内存错误
-    情况①是正确的，没有任何问题。对于情况②，pd 指向的是整型变量 n，并没有指向一个 Derived 类的对象，在使用 dynamic_cast 进行类型转换时也没有检查这一点，而是将 pd 的值直接赋给了 pb（这里并不需要调整偏移量），最终导致 pb 也指向了 n。因为 pb 指向的不是一个对象，所以get_a()得不到 m_a 的值（实际上得到的是一个垃圾值），pb2->func()也得不到 func() 函数的正确地址。
-pb2->func()得不到 func() 的正确地址的原因在于，pb2 指向的是一个假的“对象”，它没有虚函数表，也没有虚函数表指针，而 func() 是虚函数，必须到虚函数表中才能找到它的地址。
-2) 向下转型（Downcasting）
-向下转型是有风险的，dynamic_cast 会借助 RTTI 信息进行检测，确定安全的才能转换成功，否则就转换失败。
-dynamic_cast 会在程序运行过程中遍历继承链，如果途中遇到了要转换的目标类型，那么就能够转换成功，如果直到继承链的顶点（最顶层的基类）还没有遇到要转换的目标类型，那么就转换失败。
-但是从本质上讲，dynamic_cast 还是只允许向上转型，因为它只会向上遍历继承链。造成这种假象的根本原因在于，派生类对象可以用任何一个基类的指针指向它，这样做始终是安全的。
+
+1. 向上转型（Upcasting）
+   向上转型时，只要待转换的两个类型之间存在继承关系，并且基类包含了虚函数（这些信息在编译期间就能确定），
+   就一定能转换成功。因为向上转型始终是安全的，所以 dynamic_cast 不会进行任何运行期间的检查，这个时候的 dynamic_cast 和 static_cast 就没有什么区别了。
+
+   >  //情况①
+   >  Derived *pd1 = new Derived(35, 78);
+   >  Base *pb1 = dynamic_cast<Derived*>(pd1);
+   >  cout<<"pd1 = "<<pd1<<", pb1 = "<<pb1<<endl;
+   >  cout<<pb1->get_a()<<endl;
+   >  pb1->func();
+   >  //情况②
+   >  int n = 100;
+   >  Derived *pd2 = reinterpret_cast<Derived*>(&n);
+   >  Base *pb2 = dynamic_cast<Base*>(pd2);
+   >  cout<<"pd2 = "<<pd2<<", pb2 = "<<pb2<<endl;
+   >  cout<<pb2->get_a()<<endl;  //输出一个垃圾值
+   >  pb2->func();  //内存错误
+
+2.  情况①是正确的，没有任何问题。对于情况②，pd 指向的是整型变量 n，并没有指向一个 Derived 类的对象，在使用 dynamic_cast 进行类型转换时也没有检查这一点，而是将 pd 的值直接赋给了 pb（这里并不需要调整偏移量），最终导致 pb 也指向了 n。因为 pb 指向的不是一个对象，所以get_a()得不到 m_a 的值（实际上得到的是一个垃圾值），pb2->func()也得不到 func() 函数的正确地址。
+      pb2->func()得不到 func() 的正确地址的原因在于，pb2 指向的是一个假的“对象”，它没有虚函数表，也没有虚函数表指针，而 func() 是虚函数，必须到虚函数表中才能找到它的地址。
+
+3.  向下转型（Downcasting）
+    向下转型是有风险的，dynamic_cast 会借助 RTTI 信息进行检测，确定安全的才能转换成功，否则就转换失败。
+      dynamic_cast 会在程序运行过程中遍历继承链，如果途中遇到了要转换的目标类型，那么就能够转换成功，如果直到继承链的顶点（最顶层的基类）还没有遇到要转换的目标类型，那么就转换失败。
+      但是从本质上讲，dynamic_cast 还是只允许向上转型，因为它只会向上遍历继承链。造成这种假象的根本原因在于，派生类对象可以用任何一个基类的指针指向它，这样做始终是安全的。
 
 四、C++输入流和输出流
 ios 是所有流类的基类，它派生出 istream 和 ostream。特别需要指出的是，为了避免多继承的二义性，从 ios 派生出 istream 和 ostream 时，均使用了 virtual 关键字（虚继承）。
@@ -325,23 +347,31 @@ ios::cur	从当前位置开始计算偏移量
   不过 hash 值有赖于编译器的实现，在不同的编译器下可能会有不同的整数，但它们都能唯一地标识某个类型。
 
   C++ 标准规定，type_info 类至少要有如下所示的 4 个 public 属性的成员函数，其他的扩展函数编译器开发者可以自由发挥，不做限制。
-  1) 原型：const char* name() const;
-  返回一个能表示类型名称的字符串。但是C++标准并没有规定这个字符串是什么形式的，例如对于上面的objInfo.name()语句，VC/VS 下返回“class Base”，但 GCC 下返回“4Base”。
-  2) 原型：bool before (const type_info& rhs) const;
-  判断一个类型是否位于另一个类型的前面，rhs 参数是一个 type_info 对象的引用。但是C++标准并没有规定类型的排列顺序，不同的编译器有不同的排列规则，程序员也可以自定义。要特别注意的是，这个排列顺序和继承顺序没有关系，基类并不一定位于派生类的前面。
-  3) 原型：bool operator== (const type_info& rhs) const;
-  重载运算符“==”，判断两个类型是否相同，rhs 参数是一个 type_info 对象的引用。
-  4) 原型：bool operator!= (const type_info& rhs) const;
-  重载运算符“!=”，判断两个类型是否不同，rhs 参数是一个 type_info 对象的引用。
-2、dynamic_cast运算符
-  把一个基类类型的指针或引用转换至继承架构的末端某一个派生类类型的指针或引用被称为向下转型（downcast）。dynamic_cast运算符的作用是安全而有效地进行向下转型。
+
+    1) 原型：const char* name() const;
+
+    返回一个能表示类型名称的字符串。但是C++标准并没有规定这个字符串是什么形式的，例如对于上面的objInfo.name()语句，VC/VS 下返回“class Base”，但 GCC 下返回“4Base”。
+
+    2) 原型：bool before (const type_info& rhs) const;
+
+    判断一个类型是否位于另一个类型的前面，rhs 参数是一个 type_info 对象的引用。但是C++标准并没有规定类型的排列顺序，不同的编译器有不同的排列规则，程序员也可以自定义。要特别注意的是，这个排列顺序和继承顺序没有关系，基类并不一定位于派生类的前面。
+
+    3) 原型：bool operator== (const type_info& rhs) const;
+
+    重载运算符“==”，判断两个类型是否相同，rhs 参数是一个 type_info 对象的引用。
+
+    4) 原型：bool operator!= (const type_info& rhs) const;
+
+    重载运算符“!=”，判断两个类型是否不同，rhs 参数是一个 type_info 对象的引用。
+
+  2、dynamic_cast运算符
+    把一个基类类型的指针或引用转换至继承架构的末端某一个派生类类型的指针或引用被称为向下转型（downcast）。dynamic_cast运算符的作用是安全而有效地进行向下转型。
 
   dynamic_cast注意事项：
 
   只能应用于指针和引用的转换
   要转换的类型中必须包含虚函数
   转换成功返回子类的地址，失败返回NULL
-
 
 
 
