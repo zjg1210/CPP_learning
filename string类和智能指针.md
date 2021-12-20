@@ -19,35 +19,36 @@
 
    使用智能指针，必须要包含memory头文件
 
-     2、种类
-     智能指针中总共有四种（主要有三种），分别是：auto_ptr//在C++11中已弃用、share_ptr//共享拥有指针、unique_ptr//独享拥有指针
+ 2、种类  
+ 智能指针中总共有四种（主要有三种），分别是：auto_ptr//在C++11中已弃用、share_ptr//共享拥有指针、unique_ptr//独享拥有指针
+
    weak_ptr//弱拥有指针，主要是填补share_ptr的问题（当两个指针互引用时，存在指针循环的问题，导致不能完全释放内存）；
-   其中：1、auto_ptr：会造成内存崩溃
+   其中：1、auto_ptr：会造成内存崩溃  
          auto_ptr<string> p1 (new string ("I reigned lonely as a cloud.")); 
          auto_ptr<string> p2; 
-         p2 = p1; //auto_ptr编译不会报错.运行时会报错
-       2、unique_ptr：实现独占式拥有或严格拥有概念，在同一时间，一个智能指针只能指向一个对象；避免内存泄露（忘记delete时）
+         p2 = p1; //auto_ptr编译不会报错.运行时会报错  
+       2、unique_ptr：实现独占式拥有或严格拥有概念，在同一时间，一个智能指针只能指向一个对象；避免内存泄露（忘记delete时）  
           auto_ptr<string> p1 (new string ("I reigned lonely as a cloud.")); 
           auto_ptr<string> p2; 
-          p2 = p1; //auto_ptr会报错，想要实现，需要调用move(),转移p1的拥有权,p2=move(p1)
+          p2 = p1; //auto_ptr会报错，想要实现，需要调用move(),转移p1的拥有权,p2=move(p1)  
        3、shared_ptr：实现共享式拥有概念；多个智能指针可以指向同一个对象，调用count()来计算共用的对象数，解决了auto_ptr上智能指向一个对象的问题
           成员函数：   
             use_count 返回引用计数的个数,赋值时，计数加1，指针过期时，计数减1，等最后一个指针过期时，才调用delete
             unique 返回是否是独占所有权( use_count 为 1)
             swap 交换两个 shared_ptr 对象(即交换所拥有的对象)
             reset 放弃内部对象的所有权或拥有对象的变更, 会引起原有对象的引用计数的减少
-            get 返回内部对象(指针), 由于已经重载了()方法, 因此和直接使用对象是一样的.
+            get 返回内部对象(指针), 由于已经重载了()方法, 因此和直接使用对象是一样的.  
        4、weak_ptr ：是一种不控制对象生命周期的智能指针, 它指向一个 shared_ptr 管理的对象
           用来解决share_ptr指针相互指向带来的死锁问题
-          weak_ptr 没有重载*和->但可以使用 lock 获得一个可用的 shared_ptr 对象. 注意, weak_ptr 在使用前需要检查合法性.
+          weak_ptr 没有重载*和->但可以使用 lock 获得一个可用的 shared_ptr 对象. 注意, weak_ptr 在使用前需要检查合法性.  
           
 
-         expired 用于检测所管理的对象是否已经释放, 如果已经释放, 返回 true; 否则返回 false.
-         lock 用于获取所管理的对象的强引用(shared_ptr). 如果 expired 为 true, 返回一个空的 shared_ptr; 否则返回一个 shared_ptr, 其内部对象指向与 weak_ptr 相同.
-         use_count 返回与 shared_ptr 共享的对象的引用计数.
-         reset 将 weak_ptr 置空.
-         weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象的计数.
+​     expired 用于检测所管理的对象是否已经释放, 如果已经释放, 返回 true; 否则返回 false.  
+​     lock 用于获取所管理的对象的强引用(shared_ptr). 如果 expired 为 true, 返回一个空的 shared_ptr; 否则返回一个 shared_ptr, 其内部对象指向与 weak_ptr 相同.  
+​     use_count 返回与 shared_ptr 共享的对象的引用计数.  
+​     reset 将 weak_ptr 置空.  
+​     weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象的计数.  
 
 
 
-       
+​       
