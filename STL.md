@@ -1,17 +1,17 @@
-前述：
-   STL分为六大组件：容器、算法、迭代器、仿函数、适配器（配接器）、空间配置器；
-   1、迭代器：扮演了容器和算法之间的胶合剂;
-   2、仿函数：行为类似函数，可作为算法的某种策略；
-   3、空间配置器：负责空间的配置与管理;
-   
-  所有不支持随机访问迭代器的容器，不可以用标准的算法，如：sort(L1.begin(),L2.end())
- A、序列式  
-(1)容器：
-一、vector
-   1、创建vector模板类，要包含头文件vector，还要用<type>来表明对象的类型，以及动态分配内存，指明内存所需的矢量个数；
-      向量（Vector）是一个封装了动态大小数组的顺序容器（Sequence Container）。
-      顺序容器中的元素按照严格的线性顺序排序。可以通过元素在序列中的位置访问对应的元素。
-2.动态数组
+前述：  
+   STL分为六大组件：容器、算法、迭代器、仿函数、适配器（配接器）、空间配置器；  
+   1、迭代器：扮演了容器和算法之间的胶合剂;  
+   2、仿函数：行为类似函数，可作为算法的某种策略；  
+   3、空间配置器：负责空间的配置与管理;  
+
+  所有不支持随机访问迭代器的容器，不可以用标准的算法，如：sort(L1.begin(),L2.end())  
+ A、序列式    
+(1)容器：  
+一、vector  
+   1、创建vector模板类，要包含头文件vector，还要用<type>来表明对象的类型，以及动态分配内存，指明内存所需的矢量个数；  
+      向量（Vector）是一个封装了动态大小数组的顺序容器（Sequence Container）。  
+      顺序容器中的元素按照严格的线性顺序排序。可以通过元素在序列中的位置访问对应的元素。  
+2.动态数组  
 include<vector>
 vector<int>Ratings(5);//创建int型的vector对象Ratings，里面的容量为5个时间复杂度是线性的
    2、其他成员函数
@@ -27,14 +27,16 @@ push_back(val)--在内存空间尾部插入元素val
 pop_back()--数据尾部进行删除数据
 reserve(int len)--预留len个空间，使用在数据比较大时;
 
-   3、其他操作函数
-   for_each(迭代器1，迭代器2，函数(输出函数名));//该函数可以在迭代器1和迭代器2之间输出容器的内容
+   3、其他操作函数   
+   for_each(迭代器1，迭代器2，函数(输出函数名));//该函数可以在迭代器1和迭代器2之间输出容器的内容  
    sort(迭代器1，迭代器2);//该函数可以按两个迭代器之间的元素进行排序，但必须要重载符号函数，operator函数,
-或：sort(迭代器1，迭代器2，函数);//排序根据函数的参数类型来进行，如果没有这个函数，则默认调用operator函数
-   random_shuffle(迭代器1，迭代器2);// 随机排序
-   4、当原内存的空间不够时，会新开辟比原来大两倍的空间 
+或：sort(迭代器1，迭代器2，函数);//排序根据函数的参数类型来进行，如果没有这个函数，则默认调用operator函数  
+   random_shuffle(迭代器1，迭代器2);// 随机排序  
+   4、当原内存的空间不够时，会新开辟比原来大两倍的空间  
    5、容器嵌套：vector<vector<int>>v;//相当于二维数组，赋值时先对内进行赋值，再对外进行赋值，用push_back()；
-   输出时：两个for循环；
+   输出时：两个for循环；  
+
+```
    for (vector<vector<int>>::iterator It = v.begin(); It != v.end(); It++)
 		{
 			//（*It）是容器 vector<int>
@@ -45,11 +47,13 @@ reserve(int len)--预留len个空间，使用在数据比较大时;
 			}
 			cout << endl;
 		}
- 缺点：头部插入删除效率低，数据量越大，效率越低。
-二、stack 栈
-  简概：栈是一种”先进后出“的数据结构，只有一个出口，用push进行压栈和pop进行出栈
-在C++中使用栈，需要包含头文件 stack,同时还要包含使用哪种容器作为底层容器。不允许遍历，不允许随机访问栈
-例如：使用list作为底层容器
+```
+
+ 缺点：头部插入删除效率低，数据量越大，效率越低。  
+二、stack 栈   
+  简概：栈是一种”先进后出“的数据结构，只有一个出口，用push进行压栈和pop进行出栈  
+在C++中使用栈，需要包含头文件 stack,同时还要包含使用哪种容器作为底层容器。不允许遍历，不允许随机访问栈  
+例如：使用list作为底层容器  
 #include<list>
 #include<stack>
 ....
@@ -63,7 +67,7 @@ reserve(int len)--预留len个空间，使用在数据比较大时;
   istack.size();//求出栈的大小
   bool.empty()const;//判空
 相比C中，使用STL的栈更加方便，程序更加简便  
-  
+
  三、deque
   是双端队列(或者数组),内部含有中控器，用来管理缓冲区的地址，缓冲区用来存放真实的数据；
   deque可以随机访问。
@@ -77,12 +81,14 @@ reserve(int len)--预留len个空间，使用在数据比较大时;
   push_front()--头部插
   pop_back()--删除容器最后一个数据
   pop_front()--删除第一个数据
-  
+
   insert(pos,elem);
   insert(pos,n,elem);
   insert(pos,begin(),end());在pos位置插入区间[begin,end)的数据
-  
+
   AAAA级别案例：
+
+```
 void Mark(vector<person>&v)
 {
 	//int Score=0;
@@ -106,26 +112,29 @@ void Mark(vector<person>&v)
 		}
 		cout << endl;
 
-		sort(d.begin(),d.end());//排序
-		int num = 0;
-		d.pop_back();//去掉最高分
-		d.pop_front();//去掉最低分
-		//不用删除函数
-                //d.erase(d.begin());
-		//d.erase(d.end());
-		for (deque<int>::iterator de = d.begin(); de != d.end(); de++)
-		{
-			num += *de;
-		}
-		//Score = num / mem;
-		int Score = num / d.size();
-		vt->m_Score = Score;//可以用容器直接访问类中的成员，因为vt就是vector<person>，因此可以截取到m_Score进行赋值
-		
-	}
+​	sort(d.begin(),d.end());//排序
+​	int num = 0;
+​	d.pop_back();//去掉最高分
+​	d.pop_front();//去掉最低分
+​	//不用删除函数
+​            //d.erase(d.begin());
+​	//d.erase(d.end());
+​	for (deque<int>::iterator de = d.begin(); de != d.end(); de++)
+​	{
+​		num += *de;
+​	}
+​	//Score = num / mem;
+​	int Score = num / d.size();
+​	vt->m_Score = Score;//可以用容器直接访问类中的成员，因为vt就是vector<person>，因此可以截取到m_Score进行赋值
+​	
 }
+
+}
+```
+
   copy()函数： copy (myints, myints+7, myvector.begin());
               //myints是数组myints的第一个元素，myints+7是最后一个元素，将之间的元素放在vector定义的容器：myvector中
-  
+
  四、list
    list 是一个双向链表，具备前移、后移的能力，在插入操作、接合操作都不会造成原有的list失效;拥有链表的优缺点：优：可以快速插入和删除，内存动态分配，缺：速度慢，空间大
 在递增、递减、取值、成员取用操作时，递增时指向下一个节点，递减时指向上一个节点，取值时取的是节点的数值，成员取用时取用的是节点的成员;
@@ -146,12 +155,18 @@ merge()//单个参数，合并
 reverse(),//逆序,无参
 sort()//无参数 排序,默认升序
 //逆序
+
+```
 bool Mycompare(int v1,int v2)
 {
 	return v1 > v2;
 }
+```
+
 S1.sort(Mycompare);//传入一个bool型的函数，底层代码就会知道是逆排
 //当要比较几个变量时，其中一个想等时，需要以另一个作为比较
+
+```
 bool Compare(person &p1, person & p2)
 {
 	if (p1.age == p2.age)
@@ -163,6 +178,8 @@ bool Compare(person &p1, person & p2)
 		return p1.age > p2.age;
 	}
 }
+```
+
 L.sort(Compare);//当两个成员中，在其中一个相等的情况下，要以另一个来作为比较
 
 
@@ -203,6 +220,8 @@ resize();//重新定义容器的大小;如果空间比原来的大，则多出�
 3、改变set的排序
 不管数据类型是内置指定的，还是自定义的，都需要用到仿函数来实现改变排序的顺序，自定义类型必须要用仿函数来实现
 内置指定类型：
+
+```
 class compare
 {
 public:
@@ -212,7 +231,11 @@ public:
 	}
 
 };
+```
+
 使用：
+
+```
 void changeSort()
 {
 	set<int, compare>st2;
@@ -228,7 +251,11 @@ void changeSort()
 	cout << endl;
 
 }
+```
+
 自定义类型：
+
+```
 class Compare  
 {
 public:
@@ -237,7 +264,11 @@ public:
 		return p1.age > p2.age;
 	}
 };
+```
+
 使用：
+
+```
 void changeSort2()
 {
 	set<person, Compare>s;
@@ -250,11 +281,14 @@ void changeSort2()
 	s.insert(p3);
 	s.insert(p4);
 
-	for (set<person, Compare>::iterator iset = s.begin(); iset != s.end(); iset++)
-	{
-		cout <<"姓名：" <<(*iset).name<<" 年龄 ：" <<(*iset).age<< endl;
-	}	
+for (set<person, Compare>::iterator iset = s.begin(); iset != s.end(); iset++)
+{
+	cout <<"姓名：" <<(*iset).name<<" 年龄 ：" <<(*iset).age<< endl;
+}	
+
 }
+```
+
 二、map
    1、map容器元素根据键值自动排序，而且所有元素都是pair，pair中的第一个元素为key(键值)，唯一，起到索引的作用，第二个是value(实值)；
    同时，map也不可以重复插入，不可以修改map的键值；
@@ -263,6 +297,8 @@ void changeSort2()
    m1.insert(p1);
    或：m1.insert(make_pair(7,70));
    //查找
+
+```
    map<int, int>::iterator ite = m1.find(7);
 	if (ite != m1.end())
 	{
@@ -274,9 +310,13 @@ void changeSort2()
 	}
 	//计数
 	int num = m1.count(7);
-    2、排序
-    改变map默认的排序顺序，则需要用到仿函数
-       class Compare
+```
+
+​    2、排序
+​    改变map默认的排序顺序，则需要用到仿函数
+
+```
+  class Compare
 	{
 	public:
 		bool operator()(int v1,int v2)
@@ -289,5 +329,5 @@ void changeSort2()
 	{
 		cout << " 第一个值：--键值 ：" << (*im).first << " 第二个值：--实值：" << im->second << endl;
 	}
-
+```
 
